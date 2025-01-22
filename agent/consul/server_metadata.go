@@ -46,6 +46,10 @@ func ReadServerMetadata(filename string) (*ServerMetadata, error) {
 		return nil, err
 	}
 
+	if len(b) == 0 {
+		return nil, nil
+	}
+
 	var md ServerMetadata
 	if err := json.Unmarshal(b, &md); err != nil {
 		return nil, err

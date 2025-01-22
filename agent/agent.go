@@ -4708,6 +4708,11 @@ func (a *Agent) checkServerLastSeen(readFn consul.ServerMetadataReadFunc) error 
 		return fmt.Errorf("error reading server metadata: %w", err)
 	}
 
+	// Return early if the file exists, but content is empty.
+	if md == nil {
+		return nil
+	}
+
 	maxAge := a.config.ServerRejoinAgeMax
 	if md.IsLastSeenStale(maxAge) {
 		return fmt.Errorf("refusing to rejoin cluster because server has been offline for more than the configured server_rejoin_age_max (%s) - consider wiping your data dir", maxAge)
